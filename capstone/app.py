@@ -3,6 +3,8 @@ from flask_cors import CORS
 import tensorflow as tf
 import pickle
 import pandas as pd
+import gradio as gr
+import pickle
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
@@ -15,6 +17,14 @@ CORS(app, resources={
         "allow_headers": ["Content-Type"]
     }
 })
+
+# Load model
+model = pickle.load(open("model.pkl", "rb"))
+
+def predict(text):
+    return model.predict([text])[0]
+
+gr.Interface(fn=predict, inputs="text", outputs="text").launch()
 
 # Load model dan tokenizer dengan pengecekan error
 try:
